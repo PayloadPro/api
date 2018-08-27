@@ -6,10 +6,17 @@ import (
 	"net/http"
 )
 
+const (
+	// InternalServerError insidicates we couldn't handle something gracefully for the request
+	InternalServerError = `{"error": {"message": "Internal server error"}}`
+)
+
+// HTTPErrorWrapper wraps an error for JSON output
 type HTTPErrorWrapper struct {
 	Error HTTPError `json:"error"`
 }
 
+// HTTPError is the body of the error with a message inside from error
 type HTTPError struct {
 	Message error `json:"message"`
 }
@@ -28,7 +35,7 @@ func JSONEndpointHandler(w http.ResponseWriter, r *http.Request, cb callback) er
 	var nativeErr []byte
 	var status int
 
-	// th callback failed, wrap the error and return
+	// the callback failed, wrap the error and return
 	if resp, status, err = cb(); err != nil {
 		e := HTTPErrorWrapper{
 			Error: HTTPError{err},
@@ -38,7 +45,7 @@ func JSONEndpointHandler(w http.ResponseWriter, r *http.Request, cb callback) er
 			// super failure here - we couldn't marshal the error we were sending
 			// so send a plain internal server error
 			w.WriteHeader(http.StatusInternalServerError)
-			io.WriteString(w, "{\"error\": {\"message\": \"Internal server error\"}}")
+			io.WriteString(w, InternalServerError)
 			return err
 		}
 
@@ -50,11 +57,11 @@ func JSONEndpointHandler(w http.ResponseWriter, r *http.Request, cb callback) er
 	// we couldn't encode the response
 	if err = json.NewEncoder(w).Encode(resp); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(w, "{\"error\": {\"message\": \"Internal server error\"}}")
+		io.WriteString(w, InternalServerError)
 		return err
 	}
 
 	w.WriteHeader(status)
-	// spew.Dump(resp)
+
 	return err
 }

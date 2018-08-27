@@ -12,17 +12,22 @@ import (
 )
 
 const (
+	// SUCCESS is the string for the response status
 	SUCCESS = "success"
 )
 
+// CreatePayloadResponse is the response from the CreatePayload endpoint
 type CreatePayloadResponse struct {
-	Message string `json:"status"`
-	ID      string `json:"id"`
-	Bin     string `json:"bin"`
+	Status string `json:"status"`
+	ID     string `json:"id"`
+	Bin    string `json:"bin"`
 }
 
+// CreatePayload is a func which takes the incoming request, saves it persistently
+// and returns the CreatePayloadResponse for the consumer
 type CreatePayload func(context.Context, *http.Request) (*CreatePayloadResponse, int, error)
 
+// NewCreatePayload is the concrete func for CreatePayload
 func NewCreatePayload(services *deps.Services) CreatePayload {
 	return func(ctx context.Context, r *http.Request) (*CreatePayloadResponse, int, error) {
 
@@ -44,9 +49,9 @@ func NewCreatePayload(services *deps.Services) CreatePayload {
 		}
 
 		return &CreatePayloadResponse{
-			Message: SUCCESS,
-			ID:      payload.ID,
-			Bin:     payload.Bin.ID,
+			Status: SUCCESS,
+			ID:     payload.ID,
+			Bin:    payload.Bin.ID,
 		}, http.StatusCreated, nil
 	}
 }

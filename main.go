@@ -7,6 +7,7 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -19,11 +20,7 @@ import (
 
 func main() {
 
-	// Flags
-	fs := flag.NewFlagSet("", flag.ExitOnError)
-	httpAddr := fs.String("http.addr", ":8081", "Address for HTTP (JSON) server")
-	flag.Usage = fs.Usage // only show our flags
-	fs.Parse(os.Args[1:])
+	sa := getFlagConfig()
 
 	// Services
 	services := &deps.Services{
@@ -44,6 +41,24 @@ func main() {
 		})
 	})
 
-	log.Fatal(http.ListenAndServe(*httpAddr, router))
+	log.Fatal(http.ListenAndServe(*sa, router))
 
+}
+
+// getFlagConfig sets the runtime variables
+func getFlagConfig() *string {
+
+	fs := flag.NewFlagSet("", flag.ExitOnError)
+	server := fs.String("server", "localhost", "HTTP server")
+	port := fs.String("port", "8081", "HTTP server port")
+	flag.Usage = fs.Usage
+
+	fs.Parse(os.Args[1:])
+
+	si := make([]string, 0)
+	si = append(si, *server, *port)
+
+	sa := strings.Join(si, ":")
+
+	return &sa
 }
