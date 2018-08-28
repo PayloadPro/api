@@ -7,8 +7,11 @@ It's primary purpose is for debugging connected application features, such as we
 ## URL Structure
 
 https://api.payload.pro
+
 https://api.payload.pro/bins
+
 https://api.payload.pro/bins/{id}
+
 https://api.payload.pro/bins/{id}/view
 
 ## Running locally
