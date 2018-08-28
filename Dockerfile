@@ -1,9 +1,9 @@
 # Provision the app
 FROM golang:1.11-rc-alpine
 WORKDIR /go/src/github.com/andrew-waters/payload.pro
-COPY . .
 RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh
+COPY . .
 RUN go get ./...
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o payload.pro .
 
