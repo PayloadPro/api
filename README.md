@@ -31,3 +31,4 @@ This will create an API, the MongoDB 4.1.2 datastore and expose the API to you o
 ## Todo
 
  - [ ] Fake response codes to test failures
+ - [ ] Set a max input body size

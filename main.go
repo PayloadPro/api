@@ -11,8 +11,10 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/mongodb/mongo-go-driver/mongo"
 	"golang.org/x/net/context"
 
+	"github.com/andrew-waters/payload.pro/configs"
 	"github.com/andrew-waters/payload.pro/deps"
 	"github.com/andrew-waters/payload.pro/rpc"
 	"github.com/andrew-waters/payload.pro/services"
@@ -20,12 +22,37 @@ import (
 
 func main() {
 
+	var err error
+
 	sa := getFlagConfig()
 
 	// Services
 	services := &deps.Services{
 		Payload: &services.PayloadService{},
 	}
+
+	// Config
+	config := &deps.Config{
+		App: &configs.AppConfig{},
+		DB:  &configs.DatabaseConfig{},
+	}
+	config.DB.Setup()
+
+	// Create a DB Connection
+	dbc, err := mongo.NewClient(config.DB.ConnectionString())
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = dbc.Connect(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dbc.Disconnect(nil)
+
+	// Add the DB to the Service
+	database := config.DB.BinDatabase
+	collection := config.DB.BinRequestCollection
+	services.Payload.Collection = dbc.Database(database).Collection(collection)
 
 	// Context
 	rand.Seed(time.Now().UnixNano())

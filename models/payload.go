@@ -4,6 +4,8 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/mongodb/mongo-go-driver/bson"
 )
 
 // Payload is the internal reqpresentation of a request
@@ -13,7 +15,6 @@ type Payload struct {
 	Method        string
 	Proto         string
 	ContentLength int64
-	Host          string
 	UserAgent     string
 	RemoteAddr    string
 	Body          []byte
@@ -30,7 +31,6 @@ func NewPayload(r *http.Request) (*Payload, error) {
 	payload.Method = r.Method
 	payload.Proto = r.Proto
 	payload.ContentLength = r.ContentLength
-	payload.Host = r.Host
 	payload.UserAgent = r.UserAgent()
 	payload.RemoteAddr = r.RemoteAddr
 
@@ -42,4 +42,18 @@ func NewPayload(r *http.Request) (*Payload, error) {
 	payload.Body = b
 
 	return payload, nil
+}
+
+// BSON transforms a Payload to BSON for storage in MongoDB
+func (p *Payload) BSON() *bson.Document {
+	return bson.NewDocument(
+		bson.EC.String("id", p.ID),
+		bson.EC.String("bin", p.Bin.ID),
+		bson.EC.String("method", p.Method),
+		bson.EC.String("proto", p.Proto),
+		bson.EC.Int64("length", p.ContentLength),
+		bson.EC.String("ua", p.UserAgent),
+		bson.EC.String("remote", p.RemoteAddr),
+		bson.EC.String("body", string(p.Body)),
+	)
 }

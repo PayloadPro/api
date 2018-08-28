@@ -2,11 +2,14 @@ package services
 
 import (
 	"github.com/andrew-waters/payload.pro/models"
+	"github.com/mongodb/mongo-go-driver/mongo"
 	"github.com/satori/go.uuid"
 )
 
 // PayloadService deals with incoming requests
-type PayloadService struct{}
+type PayloadService struct {
+	Collection *mongo.Collection
+}
 
 // Save an incoming request
 func (s *PayloadService) Save(payload *models.Payload) error {
@@ -17,7 +20,11 @@ func (s *PayloadService) Save(payload *models.Payload) error {
 	}
 	payload.ID = id.String()
 
-	// todo - perform the save
+	_, err = s.Collection.InsertOne(nil, payload.BSON())
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
