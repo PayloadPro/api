@@ -67,7 +67,7 @@ func main() {
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
-			return rpc.NewLandingPayload(services)(ctx, r)
+			return rpc.NewLandingPayload()(ctx, r)
 		})
 	}).Methods("GET")
 

@@ -4,8 +4,6 @@ import (
 	"net/http"
 
 	"golang.org/x/net/context"
-
-	"github.com/andrew-waters/pro.payload.api/deps"
 )
 
 // LandingPayloadResponse is the response from the LandingPayload endpoint
@@ -19,7 +17,7 @@ type LandingPayloadResponse struct {
 type LandingPayload func(context.Context, *http.Request) (*LandingPayloadResponse, int, error)
 
 // NewLandingPayload is the concrete func for LandingPayload
-func NewLandingPayload(services *deps.Services) LandingPayload {
+func NewLandingPayload() LandingPayload {
 	return func(ctx context.Context, r *http.Request) (*LandingPayloadResponse, int, error) {
 
 		return &LandingPayloadResponse{
