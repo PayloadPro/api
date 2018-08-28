@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/mongodb/mongo-go-driver/bson"
 )
@@ -18,6 +19,7 @@ type Payload struct {
 	UserAgent     string
 	RemoteAddr    string
 	Body          []byte
+	Created       time.Time
 }
 
 // ErrBodyRead is returned when an body cannot be read
@@ -40,6 +42,7 @@ func NewPayload(r *http.Request) (*Payload, error) {
 	}
 
 	payload.Body = b
+	payload.Created = time.Now()
 
 	return payload, nil
 }
@@ -55,5 +58,6 @@ func (p *Payload) BSON() *bson.Document {
 		bson.EC.String("ua", p.UserAgent),
 		bson.EC.String("remote", p.RemoteAddr),
 		bson.EC.String("body", string(p.Body)),
+		bson.EC.Time("created", p.Created),
 	)
 }
