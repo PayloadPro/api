@@ -11,11 +11,6 @@ import (
 	"github.com/andrew-waters/payload.pro/models"
 )
 
-const (
-	// SUCCESS is the string for the response status
-	SUCCESS = "success"
-)
-
 // CreatePayloadResponse is the response from the CreatePayload endpoint
 type CreatePayloadResponse struct {
 	Status string `json:"status"`

@@ -35,6 +35,12 @@ func main() {
 
 	router := mux.NewRouter()
 
+	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
+			return rpc.NewLandingPayload(services)(ctx, r)
+		})
+	})
+
 	router.HandleFunc("/bins/{id}", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
 			return rpc.NewCreatePayload(services)(ctx, r)
@@ -42,7 +48,6 @@ func main() {
 	})
 
 	log.Fatal(http.ListenAndServe(*sa, router))
-
 }
 
 // getFlagConfig sets the runtime variables
