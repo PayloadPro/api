@@ -29,6 +29,7 @@ func main() {
 	// Services
 	services := &deps.Services{
 		Payload: &services.PayloadService{},
+		Bin:     &services.BinService{},
 	}
 
 	// Config
@@ -50,9 +51,11 @@ func main() {
 	defer dbc.Disconnect(nil)
 
 	// Add the DB to the Service
-	database := config.DB.BinDatabase
-	collection := config.DB.BinRequestCollection
-	services.Payload.Collection = dbc.Database(database).Collection(collection)
+	db := config.DB.BinDatabase
+	rc := config.DB.BinRequestCollection
+	bc := config.DB.BinCollection
+	services.Payload.Collection = dbc.Database(db).Collection(rc)
+	services.Bin.Collection = dbc.Database(db).Collection(bc)
 
 	// Context
 	rand.Seed(time.Now().UnixNano())
@@ -66,7 +69,13 @@ func main() {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
 			return rpc.NewLandingPayload(services)(ctx, r)
 		})
-	})
+	}).Methods("GET")
+
+	router.HandleFunc("/bins", func(w http.ResponseWriter, r *http.Request) {
+		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
+			return rpc.NewCreateBin(services)(ctx, r)
+		})
+	}).Methods("POST")
 
 	router.HandleFunc("/bins/{id}", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {

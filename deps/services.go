@@ -7,4 +7,5 @@ import (
 // Services wrapped in a container
 type Services struct {
 	Payload *services.PayloadService
+	Bin     *services.BinService
 }
