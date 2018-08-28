@@ -49,7 +49,7 @@ func main() {
 func getFlagConfig() *string {
 
 	fs := flag.NewFlagSet("", flag.ExitOnError)
-	server := fs.String("server", "localhost", "HTTP server")
+	server := fs.String("server", "0.0.0.0", "HTTP server")
 	port := fs.String("port", "8081", "HTTP server port")
 	flag.Usage = fs.Usage
 

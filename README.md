@@ -10,6 +10,16 @@ https://payload.pro/bins
 https://payload.pro/bins/{id}
 https://payload.pro/bins/{id}/view
 
+## Running locally
+
+A docker compose file is available and you can bring up a stack with:
+
+```
+docker-compose up -d
+```
+
+This will create an API, the MongoDB 4.1.2 datastore and expose the API to you on `http://localhost:8081`
+
 ## Supports
 
  - Incoming JSON
