@@ -7,8 +7,8 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/andrew-waters/payload.pro/deps"
-	"github.com/andrew-waters/payload.pro/models"
+	"github.com/andrew-waters/pro.payload.api/deps"
+	"github.com/andrew-waters/pro.payload.api/models"
 )
 
 // CreatePayloadResponse is the response from the CreatePayload endpoint

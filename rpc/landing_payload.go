@@ -5,7 +5,7 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/andrew-waters/payload.pro/deps"
+	"github.com/andrew-waters/pro.payload.api/deps"
 )
 
 // LandingPayloadResponse is the response from the LandingPayload endpoint

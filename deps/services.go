@@ -1,7 +1,7 @@
 package deps
 
 import (
-	"github.com/andrew-waters/payload.pro/services"
+	"github.com/andrew-waters/pro.payload.api/services"
 )
 
 // Services wrapped in a container

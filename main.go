@@ -14,10 +14,10 @@ import (
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"golang.org/x/net/context"
 
-	"github.com/andrew-waters/payload.pro/configs"
-	"github.com/andrew-waters/payload.pro/deps"
-	"github.com/andrew-waters/payload.pro/rpc"
-	"github.com/andrew-waters/payload.pro/services"
+	"github.com/andrew-waters/pro.payload.api/configs"
+	"github.com/andrew-waters/pro.payload.api/deps"
+	"github.com/andrew-waters/pro.payload.api/rpc"
+	"github.com/andrew-waters/pro.payload.api/services"
 )
 
 func main() {

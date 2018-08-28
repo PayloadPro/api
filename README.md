@@ -1,4 +1,4 @@
-# PayloadPro
+# Payload Pro API
 
 PayloadPro is a web application which gives you endpoints to send HTTP requests to and view the contents of the request.
 

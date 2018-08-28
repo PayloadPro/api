@@ -1,7 +1,7 @@
 package services
 
 import (
-	"github.com/andrew-waters/payload.pro/models"
+	"github.com/andrew-waters/pro.payload.api/models"
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"github.com/satori/go.uuid"
 )
