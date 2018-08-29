@@ -1,5 +1,5 @@
-hash: 3a49e924edb2c2f883a26cecf3dfc8f87c1599488a2516fb02d3ce25d81c747d
-updated: 2018-08-29T17:56:55.03268+01:00
+hash: ff7cf36e679ec8bde80f9a1a9a36cd8498a910e59417b6c877d5babe99a46d63
+updated: 2018-08-29T18:05:43.574073+01:00
 imports:
 - name: github.com/buger/jsonparser
   version: f4dd9f5a6b441265aefc1d44872a6f8c10f42b37
