@@ -1,14 +1,6 @@
-hash: 08c9a3716a524cf2c0e51f305050ef37441b74c69f4331f2c6eb4fccda2846cd
-updated: 2018-08-29T17:45:00.201893+01:00
+hash: 3a49e924edb2c2f883a26cecf3dfc8f87c1599488a2516fb02d3ce25d81c747d
+updated: 2018-08-29T17:56:55.03268+01:00
 imports:
-- name: github.com/andrew-waters/pro.payload.api
-  version: a04ab889e60a82aea1212ae1c32e87ff9fd83cff
-  subpackages:
-  - configs
-  - deps
-  - models
-  - rpc
-  - services
 - name: github.com/buger/jsonparser
   version: f4dd9f5a6b441265aefc1d44872a6f8c10f42b37
 - name: github.com/go-stack/stack

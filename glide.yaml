@@ -1,12 +1,5 @@
-package: .
+package: github.com/andrew-waters/pro.payload.api
 import:
-- package: github.com/andrew-waters/pro.payload.api
-  subpackages:
-  - configs
-  - deps
-  - models
-  - rpc
-  - services
 - package: github.com/gorilla/mux
   version: ~1.6.2
 - package: github.com/mongodb/mongo-go-driver
