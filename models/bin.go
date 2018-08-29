@@ -11,7 +11,7 @@ import (
 
 // Bin is a designated space to partition requests
 type Bin struct {
-	ID      string
+	ID      string `bson:"_id"`
 	Name    string
 	Created time.Time
 }
@@ -37,7 +37,7 @@ var ErrBinNotFound = errors.New("Bin could not be found")
 // BSON transforms a Payload to BSON for storage in MongoDB
 func (b *Bin) BSON() *bson.Document {
 	return bson.NewDocument(
-		bson.EC.String("id", b.ID),
+		bson.EC.String("_id", b.ID),
 		bson.EC.String("name", b.Name),
 		bson.EC.Time("created", b.Created),
 	)

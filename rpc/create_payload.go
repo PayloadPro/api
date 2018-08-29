@@ -34,9 +34,15 @@ func NewCreatePayload(services *deps.Services) CreatePayload {
 			return nil, http.StatusInternalServerError, err
 		}
 
-		// todo - get the bin from the DB based on ID
+		// get the bin from the DB based on ID in the URL
 		vars := mux.Vars(r)
-		payload.Bin = &models.Bin{ID: vars["id"]}
+		bin, err := services.Bin.GetByID(vars["id"])
+
+		if err != nil {
+			return nil, http.StatusNotFound, err
+		}
+
+		payload.Bin = bin
 
 		// save the payload
 		if err = services.Payload.Save(payload); err != nil {

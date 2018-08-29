@@ -18,7 +18,7 @@ type HTTPErrorWrapper struct {
 
 // HTTPError is the body of the error with a message inside from error
 type HTTPError struct {
-	Message error `json:"message"`
+	Message string `json:"message"`
 }
 
 type callback func() (interface{}, int, error)
@@ -38,7 +38,7 @@ func JSONEndpointHandler(w http.ResponseWriter, r *http.Request, cb callback) er
 	// the callback failed, wrap the error and return
 	if resp, status, err = cb(); err != nil {
 		e := HTTPErrorWrapper{
-			Error: HTTPError{err},
+			Error: HTTPError{err.Error()},
 		}
 
 		if nativeErr, err = json.Marshal(e); err != nil {
@@ -63,5 +63,5 @@ func JSONEndpointHandler(w http.ResponseWriter, r *http.Request, cb callback) er
 
 	w.WriteHeader(status)
 
-	return err
+	return nil
 }

@@ -11,7 +11,7 @@ import (
 
 // Payload is the internal reqpresentation of a request
 type Payload struct {
-	ID            string
+	ID            string `bson:"_id"`
 	Bin           *Bin
 	Method        string
 	Proto         string
@@ -50,7 +50,7 @@ func NewPayload(r *http.Request) (*Payload, error) {
 // BSON transforms a Payload to BSON for storage in MongoDB
 func (p *Payload) BSON() *bson.Document {
 	return bson.NewDocument(
-		bson.EC.String("id", p.ID),
+		bson.EC.String("_id", p.ID),
 		bson.EC.String("bin", p.Bin.ID),
 		bson.EC.String("method", p.Method),
 		bson.EC.String("proto", p.Proto),
