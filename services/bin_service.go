@@ -1,9 +1,13 @@
 package services
 
 import (
+	"context"
+	"log"
+
 	"github.com/andrew-waters/pro.payload.api/models"
 	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/mongo"
+	"github.com/mongodb/mongo-go-driver/mongo/findopt"
 	"github.com/satori/go.uuid"
 )
 
@@ -42,4 +46,34 @@ func (s *BinService) GetByID(id string) (*models.Bin, error) {
 	}
 
 	return bin, nil
+}
+
+// GetBins gets bins sorted by created date
+func (s *BinService) GetBins() ([]models.Bin, error) {
+
+	sort := findopt.Sort(bson.NewDocument(bson.EC.Int32("created", -1)))
+	limit := findopt.Limit(100)
+
+	cur, err := s.Collection.Find(nil, nil, sort, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(context.Background())
+
+	var bins []models.Bin
+
+	for cur.Next(nil) {
+		bin := models.Bin{}
+		err := cur.Decode(&bin)
+		if err != nil {
+			log.Fatal("Decode error ", err)
+		}
+		bins = append(bins, bin)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal("Cursor error ", err)
+	}
+
+	return bins, nil
 }

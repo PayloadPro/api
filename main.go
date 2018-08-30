@@ -77,6 +77,12 @@ func main() {
 		})
 	}).Methods("POST")
 
+	router.HandleFunc("/bins", func(w http.ResponseWriter, r *http.Request) {
+		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
+			return rpc.NewGetBins(services)(ctx, r)
+		})
+	}).Methods("GET")
+
 	router.HandleFunc("/bins/{id}", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
 			return rpc.NewCreatePayload(services)(ctx, r)

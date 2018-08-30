@@ -11,9 +11,9 @@ import (
 
 // Bin is a designated space to partition requests
 type Bin struct {
-	ID      string `bson:"_id"`
-	Name    string
-	Created time.Time
+	ID      string    `bson:"_id" json:"id"`
+	Name    string    `bson:"name" json:"name"`
+	Created time.Time `bson:"created" json:"created"`
 }
 
 // NewBin generates a Bin struct to use
