@@ -1,8 +1,7 @@
 steps:
-  - name: 'gcr.io/cloud-builders/glide'
-    dir: 'glide'
+  - name: 'gcr.io/cloud-builders/go'
+    args: ['get', 'golang.org/x/net']
     env: ['PROJECT_ROOT=${_APP_NAME}']
-    args: ['install', '-v']
   - name: 'gcr.io/cloud-builders/go'
     args: ['install', '.']
     env: ['PROJECT_ROOT=${_APP_NAME}']
