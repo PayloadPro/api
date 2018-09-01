@@ -4,16 +4,18 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+
+	"github.com/google/jsonapi"
 )
 
 const (
 	// InternalServerError insidicates we couldn't handle something gracefully for the request
-	InternalServerError = `{"error": {"message": "Internal server error"}}`
+	InternalServerError = `{"errors": [{"message": "Internal server error"}]}`
 )
 
 // HTTPErrorWrapper wraps an error for JSON output
 type HTTPErrorWrapper struct {
-	Error HTTPError `json:"error"`
+	Error HTTPError `json:"errors"`
 }
 
 // HTTPError is the body of the error with a message inside from error
@@ -27,9 +29,6 @@ type callback func() (interface{}, int, error)
 func JSONEndpointHandler(w http.ResponseWriter, r *http.Request, cb callback) error {
 
 	var err error
-	if w.Header().Get("Content-Type") == "" {
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	}
 
 	var resp interface{}
 	var nativeErr []byte
@@ -45,6 +44,7 @@ func JSONEndpointHandler(w http.ResponseWriter, r *http.Request, cb callback) er
 			// super failure here - we couldn't marshal the error we were sending
 			// so send a plain internal server error
 			w.WriteHeader(http.StatusInternalServerError)
+			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			io.WriteString(w, InternalServerError)
 			return err
 		}
@@ -57,11 +57,15 @@ func JSONEndpointHandler(w http.ResponseWriter, r *http.Request, cb callback) er
 	// we couldn't encode the response
 	if err = json.NewEncoder(w).Encode(resp); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		io.WriteString(w, InternalServerError)
 		return err
 	}
 
 	w.WriteHeader(status)
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	jsonapi.MarshalPayload(w, resp)
 
 	return nil
 }

@@ -57,6 +57,13 @@ func main() {
 	services.Request.Collection = dbc.Database(db).Collection(rc)
 	services.Bin.Collection = dbc.Database(db).Collection(bc)
 
+	router := createRouter(services)
+
+	log.Fatal(http.ListenAndServe(*sa, router))
+}
+
+func createRouter(services *deps.Services) *mux.Router {
+
 	// Context
 	rand.Seed(time.Now().UnixNano())
 	root := context.Background()
@@ -94,8 +101,7 @@ func main() {
 			return rpc.NewGetRequestsForBin(services)(ctx, r)
 		})
 	}).Methods("GET")
-
-	log.Fatal(http.ListenAndServe(*sa, router))
+	return router
 }
 
 // getFlagConfig sets the runtime variables

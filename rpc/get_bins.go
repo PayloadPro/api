@@ -9,17 +9,12 @@ import (
 	"github.com/PayloadPro/pro.payload.api/models"
 )
 
-// GetBinsResponse is the response from the GetBins endpoint
-type GetBinsResponse struct {
-	Bins []models.Bin `json:"bins"`
-}
-
-// GetBins is a func which takes the incoming request for the bins and returns the GetBinsResponse
-type GetBins func(context.Context, *http.Request) (*GetBinsResponse, int, error)
+// GetBins is a func which takes the incoming request for the bins and returns bins
+type GetBins func(context.Context, *http.Request) ([]models.Bin, int, error)
 
 // NewGetBins is the concrete func for GetBins
 func NewGetBins(services *deps.Services) GetBins {
-	return func(ctx context.Context, r *http.Request) (*GetBinsResponse, int, error) {
+	return func(ctx context.Context, r *http.Request) ([]models.Bin, int, error) {
 
 		var bins = make([]models.Bin, 0)
 		var err error
@@ -28,8 +23,6 @@ func NewGetBins(services *deps.Services) GetBins {
 			return nil, http.StatusInternalServerError, err
 		}
 
-		return &GetBinsResponse{
-			Bins: bins,
-		}, http.StatusOK, nil
+		return bins, http.StatusOK, nil
 	}
 }
