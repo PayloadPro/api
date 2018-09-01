@@ -14,14 +14,14 @@ import (
 type CreateBin func(context.Context, *http.Request) (*models.Bin, int, error)
 
 // NewCreateBin is the concrete func for CreateBin
-func NewCreateBin(services *deps.Services) CreateBin {
+func NewCreateBin(services *deps.Services, config *deps.Config) CreateBin {
 	return func(ctx context.Context, r *http.Request) (*models.Bin, int, error) {
 
 		// create the payload
 		var bin *models.Bin
 		var err error
 
-		if bin, err = models.NewBin(r); err != nil {
+		if bin, err = models.NewBin(r, config.App); err != nil {
 			return nil, http.StatusInternalServerError, err
 		}
 

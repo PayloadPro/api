@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/PayloadPro/pro.payload.api/configs"
 	"github.com/google/jsonapi"
 )
@@ -15,7 +17,7 @@ type Root struct {
 // NewRoot generates a Root struct to use
 func NewRoot(config *configs.AppConfig) (*Root, error) {
 	return &Root{
-		Message: "Welcome to the Payload Pro API",
+		Message: fmt.Sprintf("Welcome to the %s API", config.Name),
 		Config:  config,
 	}, nil
 }

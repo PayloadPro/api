@@ -80,25 +80,31 @@ func createRouter(services *deps.Services, config *deps.Config) *mux.Router {
 
 	router.HandleFunc("/bins", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
-			return rpc.NewCreateBin(services)(ctx, r)
+			return rpc.NewCreateBin(services, config)(ctx, r)
 		})
 	}).Methods("POST")
 
 	router.HandleFunc("/bins", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
-			return rpc.NewGetBins(services)(ctx, r)
+			return rpc.NewGetBins(services, config)(ctx, r)
 		})
 	}).Methods("GET")
 
 	router.HandleFunc("/bins/{id}", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
-			return rpc.NewCreateRequest(services)(ctx, r)
+			return rpc.NewCreateRequest(services, config)(ctx, r)
 		})
 	})
 
 	router.HandleFunc("/bins/{id}/requests", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
-			return rpc.NewGetRequestsForBin(services)(ctx, r)
+			return rpc.NewGetRequestsForBin(services, config)(ctx, r)
+		})
+	}).Methods("GET")
+
+	router.HandleFunc("/bins/{id}/requests/{request_id}", func(w http.ResponseWriter, r *http.Request) {
+		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
+			return rpc.NewGetRequestForBin(services, config)(ctx, r)
 		})
 	}).Methods("GET")
 

@@ -49,7 +49,7 @@ func (s *BinService) GetByID(id string) (*models.Bin, error) {
 }
 
 // GetBins gets bins sorted by created date
-func (s *BinService) GetBins() ([]models.Bin, error) {
+func (s *BinService) GetBins() ([]*models.Bin, error) {
 
 	sort := findopt.Sort(bson.NewDocument(bson.EC.Int32("created", -1)))
 	limit := findopt.Limit(100)
@@ -60,7 +60,7 @@ func (s *BinService) GetBins() ([]models.Bin, error) {
 	}
 	defer cur.Close(context.Background())
 
-	var bins []models.Bin
+	var bins []*models.Bin
 
 	for cur.Next(nil) {
 		bin := models.Bin{}
@@ -68,7 +68,7 @@ func (s *BinService) GetBins() ([]models.Bin, error) {
 		if err != nil {
 			log.Fatal("Decode error ", err)
 		}
-		bins = append(bins, bin)
+		bins = append(bins, &bin)
 	}
 
 	if err := cur.Err(); err != nil {

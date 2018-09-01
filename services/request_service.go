@@ -34,6 +34,20 @@ func (s *RequestService) Save(request *models.Request) (*models.Request, error) 
 	return request, nil
 }
 
+// GetRequest gets a request
+func (s *RequestService) GetRequest(id string) (*models.Request, error) {
+
+	request := &models.Request{}
+	result := s.Collection.FindOne(nil, bson.NewDocument(bson.EC.String("_id", id)))
+	result.Decode(request)
+
+	if request.ID == "" {
+		return nil, models.ErrBinNotFound
+	}
+
+	return request, nil
+}
+
 // GetRequestsForBin gets requests for a bin
 func (s *RequestService) GetRequestsForBin(id string) ([]*models.Request, error) {
 

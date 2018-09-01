@@ -16,7 +16,7 @@ import (
 type CreateRequest func(context.Context, *http.Request) (*models.Request, int, error)
 
 // NewCreateRequest is the concrete func for CreateRequest
-func NewCreateRequest(services *deps.Services) CreateRequest {
+func NewCreateRequest(services *deps.Services, config *deps.Config) CreateRequest {
 	return func(ctx context.Context, r *http.Request) (*models.Request, int, error) {
 
 		var request *models.Request
@@ -39,6 +39,8 @@ func NewCreateRequest(services *deps.Services) CreateRequest {
 		if request, err = services.Request.Save(request); err != nil {
 			return nil, http.StatusInternalServerError, err
 		}
+
+		request.Config = config.App
 
 		return request, http.StatusCreated, nil
 	}

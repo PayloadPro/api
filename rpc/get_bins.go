@@ -10,17 +10,22 @@ import (
 )
 
 // GetBins is a func which takes the incoming request for the bins and returns bins
-type GetBins func(context.Context, *http.Request) ([]models.Bin, int, error)
+type GetBins func(context.Context, *http.Request) ([]*models.Bin, int, error)
 
 // NewGetBins is the concrete func for GetBins
-func NewGetBins(services *deps.Services) GetBins {
-	return func(ctx context.Context, r *http.Request) ([]models.Bin, int, error) {
+func NewGetBins(services *deps.Services, config *deps.Config) GetBins {
+	return func(ctx context.Context, r *http.Request) ([]*models.Bin, int, error) {
 
-		var bins = make([]models.Bin, 0)
+		var bins = make([]*models.Bin, 0)
 		var err error
 
 		if bins, err = services.Bin.GetBins(); err != nil {
 			return nil, http.StatusInternalServerError, err
+		}
+
+		for i, bin := range bins {
+			bin.Config = config.App
+			bins[i] = bin
 		}
 
 		return bins, http.StatusOK, nil

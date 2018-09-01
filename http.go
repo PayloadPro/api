@@ -48,7 +48,6 @@ func JSONEndpointHandler(w http.ResponseWriter, r *http.Request, cb callback) er
 	}
 
 	w.WriteHeader(status)
-
 	if err := jsonapi.MarshalPayload(w, resp); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
