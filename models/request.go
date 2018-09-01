@@ -11,15 +11,15 @@ import (
 
 // Request is the internal representation of a request to a bin
 type Request struct {
-	ID            string    `bson:"_id" json:"id"`
-	Bin           *Bin      `json:"bin"`
-	Method        string    `json:"method"`
-	Proto         string    `json:"protocol"`
-	ContentLength int64     `json:"content_length"`
-	UserAgent     string    `json:"user_agent"`
-	RemoteAddr    string    `json:"remote_addr"`
-	Body          string    `json:"body"`
-	Created       time.Time `json:"created"`
+	ID            string    `bson:"_id" json:"id" jsonapi:"primary,request"`
+	Bin           *Bin      `json:"bin" jsonapi:"relation,bin"`
+	Method        string    `json:"method" jsonapi:"attr,method"`
+	Proto         string    `json:"protocol" jsonapi:"attr,protocol"`
+	ContentLength int64     `json:"content_length" jsonapi:"attr,content_length"`
+	UserAgent     string    `json:"user_agent" jsonapi:"attr,user_agent"`
+	RemoteAddr    string    `json:"remote_addr" jsonapi:"attr,remote_addr"`
+	Body          string    `json:"body" jsonapi:"attr,body"`
+	Created       time.Time `json:"created" jsonapi:"attr,created"`
 }
 
 // ErrBodyRead is returned when an body cannot be read
