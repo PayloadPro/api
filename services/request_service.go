@@ -35,7 +35,7 @@ func (s *RequestService) Save(request *models.Request) error {
 }
 
 // GetRequestsForBin gets requests for a bin
-func (s *RequestService) GetRequestsForBin(id string) ([]models.Request, error) {
+func (s *RequestService) GetRequestsForBin(id string) ([]*models.Request, error) {
 
 	sort := findopt.Sort(bson.NewDocument(bson.EC.Int32("created", -1)))
 	limit := findopt.Limit(100)
@@ -46,7 +46,7 @@ func (s *RequestService) GetRequestsForBin(id string) ([]models.Request, error) 
 	}
 	defer cur.Close(context.Background())
 
-	var requests []models.Request
+	var requests []*models.Request
 
 	for cur.Next(nil) {
 		request := models.Request{}
@@ -54,7 +54,7 @@ func (s *RequestService) GetRequestsForBin(id string) ([]models.Request, error) 
 		if err != nil {
 			log.Fatal("Decode error ", err)
 		}
-		requests = append(requests, request)
+		requests = append(requests, &request)
 	}
 
 	if err := cur.Err(); err != nil {

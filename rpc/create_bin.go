@@ -9,19 +9,13 @@ import (
 	"github.com/PayloadPro/pro.payload.api/models"
 )
 
-// CreateBinResponse is the response from the CreateBin endpoint
-type CreateBinResponse struct {
-	Status string `json:"status"`
-	ID     string `json:"id"`
-}
-
 // CreateBin is a func which takes the incoming request, saves it persistently
 // and returns the CreateBinResponse for the consumer
-type CreateBin func(context.Context, *http.Request) (*CreateBinResponse, int, error)
+type CreateBin func(context.Context, *http.Request) (*models.Bin, int, error)
 
 // NewCreateBin is the concrete func for CreateBin
 func NewCreateBin(services *deps.Services) CreateBin {
-	return func(ctx context.Context, r *http.Request) (*CreateBinResponse, int, error) {
+	return func(ctx context.Context, r *http.Request) (*models.Bin, int, error) {
 
 		// create the payload
 		var bin *models.Bin
@@ -36,9 +30,6 @@ func NewCreateBin(services *deps.Services) CreateBin {
 			return nil, http.StatusInternalServerError, err
 		}
 
-		return &CreateBinResponse{
-			Status: SUCCESS,
-			ID:     bin.ID,
-		}, http.StatusCreated, nil
+		return bin, http.StatusCreated, nil
 	}
 }

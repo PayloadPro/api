@@ -37,7 +37,7 @@ func main() {
 		App: &configs.AppConfig{},
 		DB:  &configs.DatabaseConfig{},
 	}
-	config.DB.Setup()
+	config.Setup()
 
 	// Create a DB Connection
 	dbc, err := mongo.NewClient(config.DB.ConnectionString())
@@ -57,12 +57,12 @@ func main() {
 	services.Request.Collection = dbc.Database(db).Collection(rc)
 	services.Bin.Collection = dbc.Database(db).Collection(bc)
 
-	router := createRouter(services)
+	router := createRouter(services, config)
 
 	log.Fatal(http.ListenAndServe(*sa, router))
 }
 
-func createRouter(services *deps.Services) *mux.Router {
+func createRouter(services *deps.Services, config *deps.Config) *mux.Router {
 
 	// Context
 	rand.Seed(time.Now().UnixNano())
@@ -74,7 +74,7 @@ func createRouter(services *deps.Services) *mux.Router {
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
-			return rpc.NewLandingPayload()(ctx, r)
+			return rpc.NewGetRoot(services, config)(ctx, r)
 		})
 	}).Methods("GET")
 
@@ -101,6 +101,7 @@ func createRouter(services *deps.Services) *mux.Router {
 			return rpc.NewGetRequestsForBin(services)(ctx, r)
 		})
 	}).Methods("GET")
+
 	return router
 }
 

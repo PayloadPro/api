@@ -1,9 +1,8 @@
 package main
 
 import (
-	"encoding/json"
-	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/google/jsonapi"
 )
@@ -15,7 +14,7 @@ const (
 
 // HTTPErrorWrapper wraps an error for JSON output
 type HTTPErrorWrapper struct {
-	Error HTTPError `json:"errors"`
+	Errors []HTTPError `jsonapi:"errors"`
 }
 
 // HTTPError is the body of the error with a message inside from error
@@ -28,44 +27,31 @@ type callback func() (interface{}, int, error)
 // JSONEndpointHandler handles API endpoints in JSON
 func JSONEndpointHandler(w http.ResponseWriter, r *http.Request, cb callback) error {
 
-	var err error
+	w.Header().Set("Content-Type", jsonapi.MediaType)
 
-	var resp interface{}
-	var nativeErr []byte
+	var err error
 	var status int
 
-	// the callback failed, wrap the error and return
-	if resp, status, err = cb(); err != nil {
-		e := HTTPErrorWrapper{
-			Error: HTTPError{err.Error()},
-		}
+	var resp interface{}
 
-		if nativeErr, err = json.Marshal(e); err != nil {
-			// super failure here - we couldn't marshal the error we were sending
-			// so send a plain internal server error
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Header().Set("Content-Type", "application/json; charset=utf-8")
-			io.WriteString(w, InternalServerError)
-			return err
-		}
+	// the callback failed, write the error and return
+	if resp, status, err = cb(); err != nil {
 
 		w.WriteHeader(status)
-		io.WriteString(w, string(nativeErr))
-		return err
-	}
+		jsonapi.MarshalErrors(w, []*jsonapi.ErrorObject{{
+			Title:  "Processing Error",
+			Detail: err.Error(),
+			Status: strconv.Itoa(status),
+		}})
 
-	// we couldn't encode the response
-	if err = json.NewEncoder(w).Encode(resp); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		io.WriteString(w, InternalServerError)
-		return err
+		return nil
 	}
 
 	w.WriteHeader(status)
 
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	jsonapi.MarshalPayload(w, resp)
+	if err := jsonapi.MarshalPayload(w, resp); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
 	return nil
 }

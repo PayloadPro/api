@@ -8,7 +8,8 @@ type Config struct {
 	DB  *configs.DatabaseConfig
 }
 
-func (c Config) init() {
+// Setup the config
+func (c Config) Setup() {
 	c.App.Setup()
 	c.DB.Setup()
 }

@@ -8,4 +8,5 @@ import (
 type Services struct {
 	Request *services.RequestService
 	Bin     *services.BinService
+	Root    *services.RootService
 }

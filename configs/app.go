@@ -4,16 +4,16 @@ import "os"
 
 // AppConfig is the config for the application
 type AppConfig struct {
-	Name       string
-	APIDomain  string
-	DocsDomain string
-	SiteDomain string
+	APILink  string
+	DocsLink string
+	Name     string
+	SiteLink string
 }
 
 // Setup the AppConfig
 func (ac *AppConfig) Setup() {
+	ac.APILink = os.Getenv("APP_API_LINK")
+	ac.DocsLink = os.Getenv("APP_DOCS_LINK")
 	ac.Name = os.Getenv("APP_NAME")
-	ac.APIDomain = os.Getenv("APP_API_DOMAIN")
-	ac.DocsDomain = os.Getenv("APP_DOCS_DOMAIN")
-	ac.SiteDomain = os.Getenv("APP_SITE_DOMAIN")
+	ac.SiteLink = os.Getenv("APP_SITE_LINK")
 }

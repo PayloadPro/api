@@ -11,9 +11,9 @@ import (
 
 // Bin is a designated space to partition requests
 type Bin struct {
-	ID      string    `bson:"_id" json:"id" jsonapi:"primary,bin"`
-	Name    string    `bson:"name" json:"name" jsonapi:"attr,name"`
-	Created time.Time `bson:"created" json:"created" jsonapi:"attr,created"`
+	ID      string    `bson:"_id" jsonapi:"primary,bin"`
+	Name    string    `bson:"name" jsonapi:"attr,name"`
+	Created time.Time `bson:"created" jsonapi:"attr,created"`
 }
 
 // NewBin generates a Bin struct to use

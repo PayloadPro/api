@@ -11,20 +11,13 @@ import (
 	"github.com/PayloadPro/pro.payload.api/models"
 )
 
-// CreateRequestResponse is the response from the CreateRequest endpoint
-type CreateRequestResponse struct {
-	Status string `json:"status"`
-	ID     string `json:"id"`
-	Bin    string `json:"bin"`
-}
-
 // CreateRequest is a func which takes the incoming request, saves it persistently
 // and returns the CreateRequestResponse for the consumer
-type CreateRequest func(context.Context, *http.Request) (*CreateRequestResponse, int, error)
+type CreateRequest func(context.Context, *http.Request) (*models.Request, int, error)
 
 // NewCreateRequest is the concrete func for CreateRequest
 func NewCreateRequest(services *deps.Services) CreateRequest {
-	return func(ctx context.Context, r *http.Request) (*CreateRequestResponse, int, error) {
+	return func(ctx context.Context, r *http.Request) (*models.Request, int, error) {
 
 		// create the request
 		var request *models.Request
@@ -49,10 +42,6 @@ func NewCreateRequest(services *deps.Services) CreateRequest {
 			return nil, http.StatusInternalServerError, err
 		}
 
-		return &CreateRequestResponse{
-			Status: SUCCESS,
-			ID:     request.ID,
-			Bin:    request.Bin.ID,
-		}, http.StatusCreated, nil
+		return request, http.StatusCreated, nil
 	}
 }

@@ -10,17 +10,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// GetRequestsResponse is the response from the GetPayload endpoint
-type GetRequestsResponse struct {
-	Requests []models.Request `json:"requests"`
-}
-
 // GetRequests is a func which takes the incoming request for the bin requests and returns the GetRequestsResponse
-type GetRequests func(context.Context, *http.Request) (*GetRequestsResponse, int, error)
+type GetRequests func(context.Context, *http.Request) ([]*models.Request, int, error)
 
 // NewGetRequestsForBin is the concrete func for GetRequests
 func NewGetRequestsForBin(services *deps.Services) GetRequests {
-	return func(ctx context.Context, r *http.Request) (*GetRequestsResponse, int, error) {
+	return func(ctx context.Context, r *http.Request) ([]*models.Request, int, error) {
 
 		// get the bin from the DB based on ID in the URL to check it exists
 		vars := mux.Vars(r)
@@ -30,13 +25,11 @@ func NewGetRequestsForBin(services *deps.Services) GetRequests {
 		}
 
 		// bin exists, get the requests
-		var requests = make([]models.Request, 0)
+		var requests = make([]*models.Request, 0)
 		if requests, err = services.Request.GetRequestsForBin(bin.ID); err != nil {
 			return nil, http.StatusInternalServerError, err
 		}
 
-		return &GetRequestsResponse{
-			Requests: requests,
-		}, http.StatusOK, nil
+		return requests, http.StatusOK, nil
 	}
 }
