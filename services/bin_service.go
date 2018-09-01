@@ -25,7 +25,7 @@ func (s *BinService) Save(bin *models.Bin) error {
 	}
 	bin.ID = id.String()
 
-	_, err = s.Collection.InsertOne(nil, bin.BSON())
+	_, err = s.Collection.InsertOne(nil, bin)
 
 	if err != nil {
 		return err

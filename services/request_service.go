@@ -17,21 +17,21 @@ type RequestService struct {
 }
 
 // Save an incoming request
-func (s *RequestService) Save(request *models.Request) error {
+func (s *RequestService) Save(request *models.Request) (*models.Request, error) {
 
 	id, err := uuid.NewV4()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	request.ID = id.String()
 
 	_, err = s.Collection.InsertOne(nil, request)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return request, nil
 }
 
 // GetRequestsForBin gets requests for a bin
@@ -40,7 +40,9 @@ func (s *RequestService) GetRequestsForBin(id string) ([]*models.Request, error)
 	sort := findopt.Sort(bson.NewDocument(bson.EC.Int32("created", -1)))
 	limit := findopt.Limit(100)
 
-	cur, err := s.Collection.Find(nil, nil, sort, limit)
+	cur, err := s.Collection.Find(nil, bson.NewDocument(
+		bson.EC.String("bin", id),
+	), sort, limit)
 	if err != nil {
 		return nil, err
 	}

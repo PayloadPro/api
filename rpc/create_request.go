@@ -19,13 +19,8 @@ type CreateRequest func(context.Context, *http.Request) (*models.Request, int, e
 func NewCreateRequest(services *deps.Services) CreateRequest {
 	return func(ctx context.Context, r *http.Request) (*models.Request, int, error) {
 
-		// create the request
 		var request *models.Request
 		var err error
-
-		if request, err = models.NewRequest(r); err != nil {
-			return nil, http.StatusInternalServerError, err
-		}
 
 		// get the bin from the DB based on ID in the URL
 		vars := mux.Vars(r)
@@ -35,10 +30,13 @@ func NewCreateRequest(services *deps.Services) CreateRequest {
 			return nil, http.StatusNotFound, err
 		}
 
-		request.Bin = bin
+		// create the request
+		if request, err = models.NewRequest(r, bin); err != nil {
+			return nil, http.StatusInternalServerError, err
+		}
 
 		// save the payload
-		if err = services.Request.Save(request); err != nil {
+		if request, err = services.Request.Save(request); err != nil {
 			return nil, http.StatusInternalServerError, err
 		}
 
