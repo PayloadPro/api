@@ -1,7 +1,7 @@
 # Payload Pro API
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/ccfa7187b136b3e0b1d8/maintainability)](https://codeclimate.com/github/andrew-waters/pro.payload.api/maintainability) 
-[![Test Coverage](https://api.codeclimate.com/v1/badges/ccfa7187b136b3e0b1d8/test_coverage)](https://codeclimate.com/github/andrew-waters/pro.payload.api/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/ccfa7187b136b3e0b1d8/maintainability)](https://codeclimate.com/github/PayloadPro/pro.payload.api/maintainability) 
+[![Test Coverage](https://api.codeclimate.com/v1/badges/ccfa7187b136b3e0b1d8/test_coverage)](https://codeclimate.com/github/PayloadPro/pro.payload.api/test_coverage)
 
 PayloadPro is a web application which gives you endpoints to send HTTP requests to and view the contents of the request.
 

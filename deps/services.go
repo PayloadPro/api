@@ -1,11 +1,11 @@
 package deps
 
 import (
-	"github.com/andrew-waters/pro.payload.api/services"
+	"github.com/PayloadPro/pro.payload.api/services"
 )
 
 // Services wrapped in a container
 type Services struct {
-	Payload *services.PayloadService
+	Request *services.RequestService
 	Bin     *services.BinService
 }

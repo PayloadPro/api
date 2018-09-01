@@ -5,8 +5,8 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/andrew-waters/pro.payload.api/deps"
-	"github.com/andrew-waters/pro.payload.api/models"
+	"github.com/PayloadPro/pro.payload.api/deps"
+	"github.com/PayloadPro/pro.payload.api/models"
 )
 
 // GetBinsResponse is the response from the GetBins endpoint

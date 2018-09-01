@@ -14,10 +14,10 @@ import (
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"golang.org/x/net/context"
 
-	"github.com/andrew-waters/pro.payload.api/configs"
-	"github.com/andrew-waters/pro.payload.api/deps"
-	"github.com/andrew-waters/pro.payload.api/rpc"
-	"github.com/andrew-waters/pro.payload.api/services"
+	"github.com/PayloadPro/pro.payload.api/configs"
+	"github.com/PayloadPro/pro.payload.api/deps"
+	"github.com/PayloadPro/pro.payload.api/rpc"
+	"github.com/PayloadPro/pro.payload.api/services"
 )
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 
 	// Services
 	services := &deps.Services{
-		Payload: &services.PayloadService{},
+		Request: &services.RequestService{},
 		Bin:     &services.BinService{},
 	}
 
@@ -54,7 +54,7 @@ func main() {
 	db := config.DB.BinDatabase
 	rc := config.DB.BinRequestCollection
 	bc := config.DB.BinCollection
-	services.Payload.Collection = dbc.Database(db).Collection(rc)
+	services.Request.Collection = dbc.Database(db).Collection(rc)
 	services.Bin.Collection = dbc.Database(db).Collection(bc)
 
 	// Context
@@ -85,9 +85,15 @@ func main() {
 
 	router.HandleFunc("/bins/{id}", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
-			return rpc.NewCreatePayload(services)(ctx, r)
+			return rpc.NewCreateRequest(services)(ctx, r)
 		})
 	})
+
+	router.HandleFunc("/bins/{id}/requests", func(w http.ResponseWriter, r *http.Request) {
+		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
+			return rpc.NewGetRequestsForBin(services)(ctx, r)
+		})
+	}).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(*sa, router))
 }

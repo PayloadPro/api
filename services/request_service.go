@@ -11,21 +11,21 @@ import (
 	"github.com/satori/go.uuid"
 )
 
-// BinService deals with incoming requests
-type BinService struct {
+// RequestService deals with incoming requests
+type RequestService struct {
 	Collection *mongo.Collection
 }
 
 // Save an incoming request
-func (s *BinService) Save(bin *models.Bin) error {
+func (s *RequestService) Save(request *models.Request) error {
 
 	id, err := uuid.NewV4()
 	if err != nil {
 		return err
 	}
-	bin.ID = id.String()
+	request.ID = id.String()
 
-	_, err = s.Collection.InsertOne(nil, bin.BSON())
+	_, err = s.Collection.InsertOne(nil, request)
 
 	if err != nil {
 		return err
@@ -34,22 +34,8 @@ func (s *BinService) Save(bin *models.Bin) error {
 	return nil
 }
 
-// GetByID gets a bin by ID
-func (s *BinService) GetByID(id string) (*models.Bin, error) {
-
-	bin := &models.Bin{}
-	result := s.Collection.FindOne(nil, bson.NewDocument(bson.EC.String("_id", id)))
-	result.Decode(bin)
-
-	if bin.ID == "" {
-		return nil, models.ErrBinNotFound
-	}
-
-	return bin, nil
-}
-
-// GetBins gets bins sorted by created date
-func (s *BinService) GetBins() ([]models.Bin, error) {
+// GetRequestsForBin gets requests for a bin
+func (s *RequestService) GetRequestsForBin(id string) ([]models.Request, error) {
 
 	sort := findopt.Sort(bson.NewDocument(bson.EC.Int32("created", -1)))
 	limit := findopt.Limit(100)
@@ -60,20 +46,20 @@ func (s *BinService) GetBins() ([]models.Bin, error) {
 	}
 	defer cur.Close(context.Background())
 
-	var bins []models.Bin
+	var requests []models.Request
 
 	for cur.Next(nil) {
-		bin := models.Bin{}
-		err := cur.Decode(&bin)
+		request := models.Request{}
+		err := cur.Decode(&request)
 		if err != nil {
 			log.Fatal("Decode error ", err)
 		}
-		bins = append(bins, bin)
+		requests = append(requests, request)
 	}
 
 	if err := cur.Err(); err != nil {
 		log.Fatal("Cursor error ", err)
 	}
 
-	return bins, nil
+	return requests, nil
 }
