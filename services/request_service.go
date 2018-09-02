@@ -39,7 +39,11 @@ func (s *RequestService) GetRequest(id string) (*models.Request, error) {
 
 	request := &models.Request{}
 	result := s.Collection.FindOne(nil, bson.NewDocument(bson.EC.String("_id", id)))
-	result.Decode(request)
+
+	err := result.Decode(request)
+	if err != nil {
+		log.Fatal("Decode error ", err)
+	}
 
 	if request.ID == "" {
 		return nil, models.ErrBinNotFound

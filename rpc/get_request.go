@@ -33,6 +33,7 @@ func NewGetRequestForBin(services *deps.Services, config *deps.Config) GetReques
 		}
 
 		request.Config = config.App
+		request.PrepareBody()
 
 		return request, http.StatusOK, nil
 	}

@@ -41,6 +41,7 @@ func NewCreateRequest(services *deps.Services, config *deps.Config) CreateReques
 		}
 
 		request.Config = config.App
+		request.PrepareBody()
 
 		return request, http.StatusCreated, nil
 	}

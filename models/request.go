@@ -1,6 +1,7 @@
 package models
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -23,7 +24,8 @@ type Request struct {
 	ContentLength int64              `bson:"content_length" jsonapi:"attr,content_length"`
 	UserAgent     string             `bson:"user_agent" jsonapi:"attr,user_agent"`
 	RemoteAddr    string             `bson:"remote_addr" jsonapi:"attr,remote_addr"`
-	Body          string             `bson:"body" jsonapi:"attr,body"`
+	Body          string             `bson:"body" jsonapi:"attr,body,omitempty"`
+	BodyI         interface{}        `jsonapi:"attr,body,omitempty"`
 	Created       time.Time          `bson:"created"`
 	Config        *configs.AppConfig `bson:"-"`
 }
@@ -44,7 +46,7 @@ func (r Request) JSONAPIMeta() *jsonapi.Meta {
 }
 
 // ErrBodyRead is returned when an body cannot be read
-var ErrBodyRead = errors.New("could not read body")
+var ErrBodyRead = errors.New("Could not read the request body - please check it's valid JSON")
 
 // NewRequest generates a Request struct to use
 func NewRequest(r *http.Request, bin *Bin) (*Request, error) {
@@ -67,4 +69,14 @@ func NewRequest(r *http.Request, bin *Bin) (*Request, error) {
 	request.Created = time.Now()
 
 	return request, nil
+}
+
+// PrepareBody for presentation - will take a string and unmarshal it
+func (r *Request) PrepareBody() {
+	var nb interface{}
+	if err := json.Unmarshal([]byte(r.Body), &nb); err != nil {
+		r.BodyI = nil
+		return
+	}
+	r.BodyI = nb
 }

@@ -34,6 +34,7 @@ func NewGetRequestsForBin(services *deps.Services, config *deps.Config) GetReque
 
 		for _, request := range requests {
 			request.Config = config.App
+			request.PrepareBody()
 		}
 
 		return requests, http.StatusOK, nil
