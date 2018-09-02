@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/PayloadPro/pro.payload.api/configs"
+	"github.com/PayloadPro/pro.payload.api/utils"
 	"github.com/google/jsonapi"
 )
 
@@ -32,7 +33,7 @@ func (b Bin) JSONAPILinks() *jsonapi.Links {
 // JSONAPIMeta return meta for the JSONAPI marshal
 func (b Bin) JSONAPIMeta() *jsonapi.Meta {
 	return &jsonapi.Meta{
-		"created": b.Created,
+		"created": utils.FormatTimeMeta(b.Created),
 	}
 }
 
