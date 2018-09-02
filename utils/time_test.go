@@ -7,7 +7,7 @@ import (
 	. "github.com/franela/goblin"
 )
 
-func Test(t *testing.T) {
+func TestTimeUtil(t *testing.T) {
 	g := Goblin(t)
 	g.Describe("FormatTimeMeta", func() {
 		g.It("Returns the correct time", func() {

@@ -1,11 +1,12 @@
 package models
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/davecgh/go-spew/spew"
 
 	"github.com/PayloadPro/pro.payload.api/configs"
 	"github.com/PayloadPro/pro.payload.api/utils"
@@ -41,12 +42,11 @@ func (b Bin) JSONAPIMeta() *jsonapi.Meta {
 func NewBin(r *http.Request, config *configs.AppConfig) (*Bin, error) {
 
 	bin := &Bin{}
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&bin)
-	if err != nil {
+
+	if err := jsonapi.UnmarshalPayload(r.Body, bin); err != nil {
 		return nil, err
 	}
-
+	spew.Dump(bin)
 	bin.Created = time.Now()
 	bin.Config = config
 
