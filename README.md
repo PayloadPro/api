@@ -15,7 +15,9 @@ https://api.payload.pro/bins
 
 https://api.payload.pro/bins/{id}
 
-https://api.payload.pro/bins/{id}/view
+https://api.payload.pro/bins/{id}/requests
+
+https://api.payload.pro/bins/{id}/requests/{req_id}
 
 ## Running locally
 
@@ -33,6 +35,7 @@ This will create an API, the MongoDB 4.1.2 datastore and expose the API to you o
 
 ## Todo
 
- - [ ] Fake response codes to test failures
- - [ ] Set a max input body size
+ - [ ] Proxy methods to forward incoming webhooks to enable MITM debugging
+ - [ ] Fake responses to test failure scenarios
+ - [ ] Set a max input body size for public API
  - [ ] Create a public docker hub image
