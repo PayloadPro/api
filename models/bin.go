@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
-
 	"github.com/PayloadPro/pro.payload.api/configs"
 	"github.com/PayloadPro/pro.payload.api/utils"
 	"github.com/google/jsonapi"
@@ -48,7 +46,6 @@ func NewBin(r *http.Request, config *configs.AppConfig) (*Bin, error) {
 	if err := jsonapi.UnmarshalPayload(r.Body, bin); err != nil {
 		return nil, err
 	}
-	spew.Dump(bin)
 	bin.Created = time.Now()
 	bin.Config = config
 
