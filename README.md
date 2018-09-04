@@ -37,6 +37,7 @@ This will create an API, the MongoDB 4.1.2 datastore and expose the API to you o
 
 ## Todo
 
+ - [ ] Automatically setup database and collections
  - [ ] Proxy methods to forward incoming webhooks to enable MITM debugging
  - [ ] Fake responses to test failure scenarios
  - [ ] Set a max input body size for public API
