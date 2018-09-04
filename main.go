@@ -92,6 +92,12 @@ func createRouter(services *deps.Services, config *deps.Config) *mux.Router {
 
 	router.HandleFunc("/bins/{id}", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
+			return rpc.NewGetBin(services, config)(ctx, r)
+		})
+	}).Methods("GET")
+
+	router.HandleFunc("/bins/{id}/request", func(w http.ResponseWriter, r *http.Request) {
+		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
 			return rpc.NewCreateRequest(services, config)(ctx, r)
 		})
 	})

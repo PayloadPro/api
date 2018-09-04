@@ -9,15 +9,17 @@ It's primary purpose is for debugging connected application features, such as we
 
 ## URL Structure
 
-https://api.payload.pro
+[ GET ] https://api.payload.pro
 
-https://api.payload.pro/bins
+[ GET|POST ] https://api.payload.pro/bins
 
-https://api.payload.pro/bins/{id}
+[ GET ] https://api.payload.pro/bins/{id}
 
-https://api.payload.pro/bins/{id}/requests
+[ ANY ] https://api.payload.pro/bins/{id}/request
 
-https://api.payload.pro/bins/{id}/requests/{req_id}
+[ GET ] https://api.payload.pro/bins/{id}/requests
+
+[ GET ] https://api.payload.pro/bins/{id}/requests/{req_id}
 
 ## Running locally
 
