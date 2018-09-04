@@ -27,7 +27,9 @@ type Bin struct {
 // JSONAPILinks return links for the JSONAPI marshal
 func (b Bin) JSONAPILinks() *jsonapi.Links {
 	return &jsonapi.Links{
-		"self": fmt.Sprintf("%s/bins/%s", b.Config.APILink, b.ID),
+		"self":     fmt.Sprintf("%s/bins/%s", b.Config.APILink, b.ID),
+		"request":  fmt.Sprintf("%s/bins/%s/request", b.Config.APILink, b.ID),
+		"requests": fmt.Sprintf("%s/bins/%s/requests", b.Config.APILink, b.ID),
 	}
 }
 

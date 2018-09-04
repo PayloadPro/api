@@ -34,8 +34,10 @@ type Request struct {
 // JSONAPILinks return links for the JSONAPI marshal
 func (r Request) JSONAPILinks() *jsonapi.Links {
 	return &jsonapi.Links{
-		"self": fmt.Sprintf("%s/bins/%s/requests/%s", r.Config.APILink, r.Bin, r.ID),
-		"bin":  fmt.Sprintf("%s/bins/%s", r.Config.APILink, r.Bin),
+		"self":     fmt.Sprintf("%s/bins/%s/requests/%s", r.Config.APILink, r.Bin, r.ID),
+		"bin":      fmt.Sprintf("%s/bins/%s", r.Config.APILink, r.Bin),
+		"request":  fmt.Sprintf("%s/bins/%s/request", r.Config.APILink, r.Bin),
+		"requests": fmt.Sprintf("%s/bins/%s/requests", r.Config.APILink, r.Bin),
 	}
 }
 
