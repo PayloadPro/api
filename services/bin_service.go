@@ -34,6 +34,18 @@ func (s *BinService) Save(bin *models.Bin) error {
 	return nil
 }
 
+// Replace a bin (akin to updating)
+func (s *BinService) Replace(bin *models.Bin) error {
+
+	_, err := s.Collection.ReplaceOne(nil, bson.NewDocument(bson.EC.String("_id", bin.ID)), bin)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // GetByID gets a bin by ID
 func (s *BinService) GetByID(id string) (*models.Bin, error) {
 
