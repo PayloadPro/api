@@ -27,8 +27,8 @@ func NewGetRequestForBin(services *deps.Services, config *deps.Config) GetReques
 		}
 
 		// bin exists, get the request
-		request, err := services.Request.GetRequest(vars["request_id"])
-		if request.Bin != bin.ID {
+		request, err := services.Request.GetRequest(vars["request_id"], bin)
+		if request.Bin.ID != bin.ID {
 			return nil, http.StatusNotFound, models.ErrRequestNotFound
 		}
 

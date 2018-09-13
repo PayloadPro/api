@@ -31,6 +31,7 @@ func NewGetBin(services *deps.Services, config *deps.Config) GetBin {
 		}
 
 		bin.Config = config.App
+		services.Stats.GetStatsForBin(bin)
 
 		return bin, http.StatusOK, nil
 	}

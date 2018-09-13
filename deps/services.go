@@ -6,7 +6,8 @@ import (
 
 // Services wrapped in a container
 type Services struct {
-	Request *services.RequestService
 	Bin     *services.BinService
+	Request *services.RequestService
 	Root    *services.RootService
+	Stats   *services.StatsService
 }

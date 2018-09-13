@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"flag"
 	"log"
 	"math/rand"
@@ -11,7 +12,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/mongodb/mongo-go-driver/mongo"
+	_ "github.com/lib/pq"
 	"golang.org/x/net/context"
 
 	"github.com/PayloadPro/pro.payload.api/configs"
@@ -28,34 +29,30 @@ func main() {
 
 	// Services
 	services := &deps.Services{
-		Request: &services.RequestService{},
 		Bin:     &services.BinService{},
+		Request: &services.RequestService{},
+		Stats:   &services.StatsService{},
 	}
 
 	// Config
 	config := &deps.Config{
 		App: &configs.AppConfig{},
-		DB:  &configs.DatabaseConfig{},
+		DB:  &configs.CockroachConfig{},
 	}
 	config.Setup()
 
 	// Create a DB Connection
-	dbc, err := mongo.NewClient(config.DB.ConnectionString())
+	db, err := sql.Open("postgres", config.DB.ConnectionString())
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("error connecting to the database: ", err)
 	}
-	err = dbc.Connect(context.Background())
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer dbc.Disconnect(nil)
+
+	defer db.Close()
 
 	// Add the DB to the Service
-	db := config.DB.BinDatabase
-	rc := config.DB.BinRequestCollection
-	bc := config.DB.BinCollection
-	services.Request.Collection = dbc.Database(db).Collection(rc)
-	services.Bin.Collection = dbc.Database(db).Collection(bc)
+	services.Bin.DB = db
+	services.Request.DB = db
+	services.Stats.DB = db
 
 	router := createRouter(services, config)
 
@@ -85,6 +82,12 @@ func createRouter(services *deps.Services, config *deps.Config) *mux.Router {
 	}).Methods("POST")
 
 	router.HandleFunc("/bins", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Access-Control-Allow-Methods", "POST")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+	}).Methods("OPTIONS")
+
+	router.HandleFunc("/bins", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
 			return rpc.NewGetBins(services, config)(ctx, r)
 		})
@@ -95,6 +98,12 @@ func createRouter(services *deps.Services, config *deps.Config) *mux.Router {
 			return rpc.NewGetBin(services, config)(ctx, r)
 		})
 	}).Methods("GET")
+
+	router.HandleFunc("/bins/{id}", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+	}).Methods("OPTIONS")
 
 	router.HandleFunc("/bins/{id}/request", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
@@ -108,11 +117,23 @@ func createRouter(services *deps.Services, config *deps.Config) *mux.Router {
 		})
 	}).Methods("GET")
 
+	router.HandleFunc("/bins/{id}/requests", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Access-Control-Allow-Methods", "GET")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+	}).Methods("OPTIONS")
+
 	router.HandleFunc("/bins/{id}/requests/{request_id}", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
 			return rpc.NewGetRequestForBin(services, config)(ctx, r)
 		})
 	}).Methods("GET")
+
+	router.HandleFunc("/bins/{id}/requests/{request_id}", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+	}).Methods("OPTIONS")
 
 	return router
 }

@@ -28,6 +28,11 @@ func NewGetBins(services *deps.Services, config *deps.Config) GetBins {
 			bins[i] = bin
 		}
 
+		err = services.Stats.GetStatsForBins(bins)
+		if err != nil {
+			return nil, http.StatusInternalServerError, err
+		}
+
 		return bins, http.StatusOK, nil
 	}
 }

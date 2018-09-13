@@ -20,15 +20,14 @@ func NewGetRequestsForBin(services *deps.Services, config *deps.Config) GetReque
 		// get the bin from the DB based on ID in the URL to check it exists
 		vars := mux.Vars(r)
 		bin, err := services.Bin.GetByID(vars["id"])
-		bin.Config = config.App
-
 		if err != nil {
 			return nil, http.StatusNotFound, err
 		}
+		bin.Config = config.App
 
 		// bin exists, get the requests
 		var requests = make([]*models.Request, 0)
-		if requests, err = services.Request.GetRequestsForBin(bin.ID); err != nil {
+		if requests, err = services.Request.GetRequestsForBin(bin); err != nil {
 			return nil, http.StatusInternalServerError, err
 		}
 

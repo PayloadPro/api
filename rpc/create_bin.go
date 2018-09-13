@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"net/http"
+	"time"
 
 	"golang.org/x/net/context"
 
@@ -25,11 +26,14 @@ func NewCreateBin(services *deps.Services, config *deps.Config) CreateBin {
 			return nil, http.StatusInternalServerError, err
 		}
 
+		bin.RemoteAddr = r.RemoteAddr
+		bin.Created = time.Now()
+
 		// save the bin
 		if err = services.Bin.Save(bin); err != nil {
 			return nil, http.StatusInternalServerError, err
 		}
-
+		bin.Stats = &models.Stats{}
 		return bin, http.StatusCreated, nil
 	}
 }

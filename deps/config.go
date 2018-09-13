@@ -5,7 +5,7 @@ import "github.com/PayloadPro/pro.payload.api/configs"
 // Config wrapped in a container
 type Config struct {
 	App *configs.AppConfig
-	DB  *configs.DatabaseConfig
+	DB  *configs.CockroachConfig
 }
 
 // Setup the config

@@ -18,26 +18,27 @@ var ErrRequestNotFound = errors.New("Request could not be found")
 
 // Request is the internal representation of a request to a bin
 type Request struct {
-	ID            string             `bson:"_id" jsonapi:"primary,request"`
-	Bin           string             `bson:"bin"`
-	Method        string             `bson:"method" jsonapi:"attr,method"`
-	Proto         string             `bson:"protocol" jsonapi:"attr,protocol"`
-	ContentLength int64              `bson:"content_length" jsonapi:"attr,content_length"`
-	UserAgent     string             `bson:"user_agent" jsonapi:"attr,user_agent"`
-	RemoteAddr    string             `bson:"remote_addr" jsonapi:"attr,remote_addr"`
-	Body          string             `bson:"body" jsonapi:"attr,body,omitempty"`
-	BodyI         interface{}        `jsonapi:"attr,body,omitempty"`
-	Created       time.Time          `bson:"created"`
-	Config        *configs.AppConfig `bson:"-"`
+	ID            string `jsonapi:"primary,request"`
+	Bin           *Bin
+	Method        string      `jsonapi:"attr,method"`
+	Proto         string      `jsonapi:"attr,protocol"`
+	ContentLength int64       `jsonapi:"attr,content_length"`
+	ContentType   string      `jsonapi:"attr,content_type"`
+	UserAgent     string      `jsonapi:"attr,user_agent"`
+	RemoteAddr    string      `jsonapi:"attr,remote_addr"`
+	Body          []byte      `jsonapi:"attr,body,omitempty"`
+	BodyI         interface{} `jsonapi:"attr,body,omitempty"`
+	Created       time.Time
+	Config        *configs.AppConfig
 }
 
 // JSONAPILinks return links for the JSONAPI marshal
 func (r Request) JSONAPILinks() *jsonapi.Links {
 	return &jsonapi.Links{
-		"self":     fmt.Sprintf("%s/bins/%s/requests/%s", r.Config.APILink, r.Bin, r.ID),
-		"bin":      fmt.Sprintf("%s/bins/%s", r.Config.APILink, r.Bin),
-		"request":  fmt.Sprintf("%s/bins/%s/request", r.Config.APILink, r.Bin),
-		"requests": fmt.Sprintf("%s/bins/%s/requests", r.Config.APILink, r.Bin),
+		"self":     fmt.Sprintf("%s/bins/%s/requests/%s", r.Config.APILink, r.Bin.ID, r.ID),
+		"bin":      fmt.Sprintf("%s/bins/%s", r.Config.APILink, r.Bin.ID),
+		"request":  fmt.Sprintf("%s/bins/%s/request", r.Config.APILink, r.Bin.ID),
+		"requests": fmt.Sprintf("%s/bins/%s/requests", r.Config.APILink, r.Bin.ID),
 	}
 }
 
@@ -59,17 +60,17 @@ func NewRequest(r *http.Request, bin *Bin) (*Request, error) {
 	request.Method = r.Method
 	request.Proto = r.Proto
 	request.ContentLength = r.ContentLength
+	request.ContentType = r.Header.Get("Content-Type")
 	request.UserAgent = r.UserAgent()
 	request.RemoteAddr = r.RemoteAddr
-	request.Bin = bin.ID
+	request.Bin = bin
 
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return request, ErrBodyRead
 	}
 
-	request.Body = string(b)
-	request.Created = time.Now()
+	request.Body = b
 
 	return request, nil
 }

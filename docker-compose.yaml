@@ -1,23 +1,77 @@
 version: '3'
+
 services:
   api:
     build: .
     ports:
       - "8081:8081"
     links:
-      - mongo
+      - cockroach-1
+      - cockroach-2
+      - cockroach-3
     networks:
       - proxy
     depends_on:
-      - mongo
+      - cockroach-1
     env_file:
       - .env
-  mongo:
-    image: mongo:4.1-xenial
+  cockroach-1:
+    image: cockroachdb/cockroach
+    command: start --insecure
+    hostname: cockroach-1
+    volumes:
+     - ./data/cockroach_1:/cockroach/cockroach-data
+    expose:
+     - "8080"
+    ports:
+     - "8080:8080"
+    networks:
+     - proxy
+  cockroach-2:
+    image: cockroachdb/cockroach
+    command: start --insecure --join=cockroach-1
+    hostname: cockroach-2
+    networks:
+     - proxy
+    volumes:
+     - ./data/cockroach_2:/cockroach/cockroach-data
+  cockroach-3:
+    image: cockroachdb/cockroach
+    command: start --insecure --join=cockroach-1
+    hostname: cockroach-3
+    networks:
+     - proxy
+    volumes:
+     - ./data/cockroach_3:/cockroach/cockroach-data
+  cockroach-init:
+    image: cockroachdb/cockroach
     networks:
       - proxy
+    volumes:
+      - ./setup_db.sh:/setup_db.sh
+    entrypoint: "/bin/bash"
+    command: /setup_db.sh
+  cockroach-proxy:
+    build: 
+      context: .
+      dockerfile: haproxy.Dockerfile
+    hostname: cockroach-proxy
+    expose:
+      - "26257"
     ports:
-      - "27018:27017"
+      - "26257:26257"
+    links:
+      - cockroach-1
+      - cockroach-2
+      - cockroach-3
+    networks:
+      - proxy
+    depends_on:
+      - cockroach-init
+      - cockroach-1
+      - cockroach-2
+      - cockroach-3
+
 networks:
   proxy:
     driver: bridge

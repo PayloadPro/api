@@ -36,13 +36,12 @@ func NewCreateRequest(services *deps.Services, config *deps.Config) CreateReques
 		}
 
 		// save the payload
-		if request, err = services.Request.Save(request); err != nil {
+		if err = services.Request.Save(request); err != nil {
 			return nil, http.StatusInternalServerError, err
 		}
 
 		// the request was successful, add it to the bin stats for meta
-		bin.AddRequest(request)
-		if err = services.Bin.Replace(bin); err != nil {
+		if err = services.Stats.AddRequest(request); err != nil {
 			return nil, http.StatusInternalServerError, err
 		}
 
