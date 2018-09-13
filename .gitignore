@@ -1,3 +1,5 @@
-payload.pro
-vendor
 data
+deployments/haproxy.cfg
+payload.pro
+tests/load/results.json
+vendor

@@ -2,7 +2,9 @@ version: '3'
 
 services:
   api:
-    build: .
+    build: 
+      context: .
+      dockerfile: ./deployments/Dockerfile
     ports:
       - "8081:8081"
     links:
@@ -53,8 +55,8 @@ services:
     command: /setup_db.sh
   cockroach-proxy:
     build: 
-      context: .
-      dockerfile: haproxy.Dockerfile
+      context: ./deployments
+      dockerfile: ./haproxy.Dockerfile
     hostname: cockroach-proxy
     expose:
       - "26257"
