@@ -33,17 +33,23 @@ docker-compose up -d
 
 This will create:
 
- - API on `http://localhost:8081`
- - CockroachDB UI on `http://localhost:8080`
- - CockroachDB cluster on `http://localhost:26257`
+ - The API on `http://localhost:8081`
+ - A CockroachDB UI on `http://localhost:8080`
+ - A CockroachDB 3 node cluster on `http://localhost:26257`
 
+The API will be running the latest public release. If you want to develop locally, you can change the docker compose file to build the docker image locally by replacing:
 
-## Todo
+```
+  api:
+    image: payloadpro/api
+```
 
- - [ ] Proxy methods to forward incoming webhooks to enable MITM debugging
- - [ ] Fake responses to test failure scenarios
- - [ ] Set a max input body size for public API
- - [ ] Create a public docker hub image
+with:
+
+```
+  api:
+    build: .
+```
 
 
 ## Creating HA Proxy Configs
@@ -55,7 +61,7 @@ cd ./deployments && \
 cockroach gen haproxy --insecure --host localhost
 ```
 
-This will generate the HA Proxy config based on discovery with the cluster. You can change the host and connection methods, as well as the output file depending ont he environment you're configuring.
+This will generate the HA Proxy config based on discovery with the cluster. You can change the host and connection methods, as well as the output file depending on the environment you're configuring.
 
 
 ## Load Testing

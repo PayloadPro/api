@@ -42,7 +42,7 @@ func main() {
 	config.Setup()
 
 	// Create a DB Connection
-	db, err := sql.Open("postgres", config.DB.ConnectionString())
+	db, err := sql.Open("postgres", config.DB.DSN)
 	if err != nil {
 		log.Fatal("error connecting to the database: ", err)
 	}

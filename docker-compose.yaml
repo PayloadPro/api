@@ -2,9 +2,7 @@ version: '3'
 
 services:
   api:
-    build: 
-      context: .
-      dockerfile: ./deployments/Dockerfile
+    image: payloadpro/api
     ports:
       - "8081:8081"
     links:
