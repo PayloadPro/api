@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo "Waiting for servers to be up"
+echo "Waiting for cockroach servers to be up"
 sleep 10
 
-HOSTPARAMS="--host cockroach-1 --insecure"
+HOSTPARAMS="--host cockroach-proxy --insecure"
 SQL="/cockroach/cockroach.sh sql $HOSTPARAMS"
 
 $SQL -e "CREATE DATABASE IF NOT EXISTS payloadpro;"
