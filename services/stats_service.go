@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/PayloadPro/pro.payload.api/models"
+	"github.com/PayloadPro/api/models"
 )
 
 // StatsService deals with incoming requests

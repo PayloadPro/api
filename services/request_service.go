@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/PayloadPro/pro.payload.api/models"
+	"github.com/PayloadPro/api/models"
 )
 
 // RequestService deals with incoming requests

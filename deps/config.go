@@ -1,6 +1,6 @@
 package deps
 
-import "github.com/PayloadPro/pro.payload.api/configs"
+import "github.com/PayloadPro/api/configs"
 
 // Config wrapped in a container
 type Config struct {

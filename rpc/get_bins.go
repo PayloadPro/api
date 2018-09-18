@@ -5,8 +5,8 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/PayloadPro/pro.payload.api/deps"
-	"github.com/PayloadPro/pro.payload.api/models"
+	"github.com/PayloadPro/api/deps"
+	"github.com/PayloadPro/api/models"
 )
 
 // GetBins is a func which takes the incoming request for the bins and returns bins

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/PayloadPro/pro.payload.api/configs"
+	"github.com/PayloadPro/api/configs"
 	"github.com/google/jsonapi"
 )
 

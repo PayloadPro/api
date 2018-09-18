@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/PayloadPro/pro.payload.api/configs"
-	"github.com/PayloadPro/pro.payload.api/models"
+	"github.com/PayloadPro/api/configs"
+	"github.com/PayloadPro/api/models"
 )
 
 // RootService deals with root requests (/)

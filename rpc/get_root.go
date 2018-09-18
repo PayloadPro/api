@@ -3,9 +3,9 @@ package rpc
 import (
 	"net/http"
 
-	"github.com/PayloadPro/pro.payload.api/deps"
+	"github.com/PayloadPro/api/deps"
 
-	"github.com/PayloadPro/pro.payload.api/models"
+	"github.com/PayloadPro/api/models"
 	"golang.org/x/net/context"
 )
 

@@ -6,8 +6,8 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/PayloadPro/pro.payload.api/deps"
-	"github.com/PayloadPro/pro.payload.api/models"
+	"github.com/PayloadPro/api/deps"
+	"github.com/PayloadPro/api/models"
 	"github.com/gorilla/mux"
 )
 

@@ -15,10 +15,10 @@ import (
 	_ "github.com/lib/pq"
 	"golang.org/x/net/context"
 
-	"github.com/PayloadPro/pro.payload.api/configs"
-	"github.com/PayloadPro/pro.payload.api/deps"
-	"github.com/PayloadPro/pro.payload.api/rpc"
-	"github.com/PayloadPro/pro.payload.api/services"
+	"github.com/PayloadPro/api/configs"
+	"github.com/PayloadPro/api/deps"
+	"github.com/PayloadPro/api/rpc"
+	"github.com/PayloadPro/api/services"
 )
 
 func main() {
