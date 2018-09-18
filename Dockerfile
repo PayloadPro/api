@@ -7,10 +7,10 @@ RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh
 COPY ./ /go/src/github.com/PayloadPro/api
 RUN go get
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o api .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o binary .
 
 FROM scratch
 ENV PATH=/bin
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=build /go/src/github.com/PayloadPro/pro.payload.api/api /bin/api
+COPY --from=build /go/src/github.com/PayloadPro/api/binary /bin/api
 CMD ["./bin/api"]
