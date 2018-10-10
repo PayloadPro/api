@@ -7,7 +7,7 @@ import (
 
 func TestCockroachSetup(t *testing.T) {
 
-	DSN := "postgresql://user:pass@host:port/table"
+	DSN := "postgresql://user@host:port/table"
 
 	os.Setenv("DB_DSN", DSN)
 
