@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"golang.org/x/net/context"
@@ -56,7 +57,15 @@ func main() {
 
 	router := createRouter(services, config)
 
-	log.Fatal(http.ListenAndServe(*sa, router))
+	log.Fatal(http.ListenAndServe(*sa, handler(router)))
+}
+
+func handler(router *mux.Router) http.Handler {
+	origins := handlers.AllowedOrigins([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	headers := handlers.AllowedHeaders([]string{"*"})
+	methods := handlers.AllowedMethods([]string{"DELETE", "GET", "HEAD", "PATCH", "POST", "PUT", "OPTIONS"})
+
+	return handlers.CORS(origins, headers, methods)(router)
 }
 
 func createRouter(services *deps.Services, config *deps.Config) *mux.Router {
@@ -82,12 +91,6 @@ func createRouter(services *deps.Services, config *deps.Config) *mux.Router {
 	}).Methods("POST")
 
 	router.HandleFunc("/bins", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Header().Set("Access-Control-Allow-Methods", "POST")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-	}).Methods("OPTIONS")
-
-	router.HandleFunc("/bins", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
 			return rpc.NewGetBins(services, config)(ctx, r)
 		})
@@ -98,12 +101,6 @@ func createRouter(services *deps.Services, config *deps.Config) *mux.Router {
 			return rpc.NewGetBin(services, config)(ctx, r)
 		})
 	}).Methods("GET")
-
-	router.HandleFunc("/bins/{id}", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-	}).Methods("OPTIONS")
 
 	router.HandleFunc("/bins/{id}/request", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
@@ -117,23 +114,11 @@ func createRouter(services *deps.Services, config *deps.Config) *mux.Router {
 		})
 	}).Methods("GET")
 
-	router.HandleFunc("/bins/{id}/requests", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Header().Set("Access-Control-Allow-Methods", "GET")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-	}).Methods("OPTIONS")
-
 	router.HandleFunc("/bins/{id}/requests/{request_id}", func(w http.ResponseWriter, r *http.Request) {
 		JSONEndpointHandler(w, r, func() (interface{}, int, error) {
 			return rpc.NewGetRequestForBin(services, config)(ctx, r)
 		})
 	}).Methods("GET")
-
-	router.HandleFunc("/bins/{id}/requests/{request_id}", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-	}).Methods("OPTIONS")
 
 	return router
 }
