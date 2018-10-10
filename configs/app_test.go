@@ -3,9 +3,13 @@ package configs
 import (
 	"os"
 	"testing"
+
+	. "github.com/franela/goblin"
 )
 
 func TestAppSetup(t *testing.T) {
+
+	g := Goblin(t)
 
 	name := "Payload Pro"
 	APILink := "https://api.payload.pro"
@@ -20,19 +24,24 @@ func TestAppSetup(t *testing.T) {
 	ac := &AppConfig{}
 	ac.Setup()
 
-	if ac.Name != name {
-		t.Errorf("Incorrect App Name. Got: `%s`, expected: `%s`", ac.Name, name)
-	}
+	g.Describe("Returns OS env vars as values", func() {
 
-	if ac.APILink != APILink {
-		t.Errorf("Incorrect API Link. Got: `%s`, expected: `%s`", ac.APILink, APILink)
-	}
+		g.It("Contains the correct App Name", func() {
+			g.Assert(ac.Name).Equal(name)
+		})
 
-	if ac.DocsLink != DocsLink {
-		t.Errorf("Incorrect Docs Link. Got: `%s`, expected: `%s`", ac.DocsLink, DocsLink)
-	}
+		g.It("Contains the correct API link", func() {
+			g.Assert(ac.APILink).Equal(APILink)
+		})
 
-	if ac.SiteLink != SiteLink {
-		t.Errorf("Incorrect Site Link. Got: `%s`, expected: `%s`", ac.SiteLink, SiteLink)
-	}
+		g.It("Contains the correct docs link", func() {
+			g.Assert(ac.DocsLink).Equal(DocsLink)
+		})
+
+		g.It("Contains the correct site link", func() {
+			g.Assert(ac.SiteLink).Equal(SiteLink)
+		})
+
+	})
+
 }

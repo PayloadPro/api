@@ -5,9 +5,12 @@ import (
 	"testing"
 
 	"github.com/PayloadPro/api/configs"
+	. "github.com/franela/goblin"
 )
 
 func TestCockroachSetup(t *testing.T) {
+
+	g := Goblin(t)
 
 	name := "Payload Pro"
 	APILink := "https://api.payload.pro"
@@ -27,22 +30,27 @@ func TestCockroachSetup(t *testing.T) {
 	}
 	c.Setup()
 
-	if c.App.Name != name {
-		t.Errorf("Incorrect Name. Got: `%s`, expected: `%s`", c.App.Name, name)
-	}
-	if c.App.APILink != APILink {
-		t.Errorf("Incorrect API Link. Got: `%s`, expected: `%s`", c.App.APILink, APILink)
-	}
+	g.Describe("Sets up App and DB configs correctly", func() {
 
-	if c.App.DocsLink != DocsLink {
-		t.Errorf("Incorrect Docs Link. Got: `%s`, expected: `%s`", c.App.DocsLink, DocsLink)
-	}
+		g.It("Contains the correct DB DSN", func() {
+			g.Assert(c.DB.DSN).Equal(DSN)
+		})
 
-	if c.App.SiteLink != SiteLink {
-		t.Errorf("Incorrect Site Link. Got: `%s`, expected: `%s`", c.App.SiteLink, SiteLink)
-	}
+		g.It("Contains the correct app name", func() {
+			g.Assert(c.App.Name).Equal(name)
+		})
 
-	if c.DB.DSN != DSN {
-		t.Errorf("Incorrect DSN. Got: `%s`, expected: `%s`", c.DB.DSN, DSN)
-	}
+		g.It("Contains the correct app API link", func() {
+			g.Assert(c.App.APILink).Equal(APILink)
+		})
+
+		g.It("Contains the correct app docs link", func() {
+			g.Assert(c.App.DocsLink).Equal(DocsLink)
+		})
+
+		g.It("Contains the correct app site link", func() {
+			g.Assert(c.App.SiteLink).Equal(SiteLink)
+		})
+
+	})
 }

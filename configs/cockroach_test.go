@@ -3,9 +3,13 @@ package configs
 import (
 	"os"
 	"testing"
+
+	. "github.com/franela/goblin"
 )
 
 func TestCockroachSetup(t *testing.T) {
+
+	g := Goblin(t)
 
 	DSN := "postgresql://user@host:port/table"
 
@@ -14,7 +18,12 @@ func TestCockroachSetup(t *testing.T) {
 	db := &CockroachConfig{}
 	db.Setup()
 
-	if db.DSN != DSN {
-		t.Errorf("Incorrect DSN. Got: `%s`, expected: `%s`", db.DSN, DSN)
-	}
+	g.Describe("Returns OS env vars as values", func() {
+
+		g.It("Contains the correct DSN", func() {
+			g.Assert(db.DSN).Equal(DSN)
+		})
+
+	})
+
 }
