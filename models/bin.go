@@ -36,8 +36,8 @@ func (b Bin) JSONAPILinks() *jsonapi.Links {
 // JSONAPIMeta return meta for the JSONAPI marshal
 func (b Bin) JSONAPIMeta() *jsonapi.Meta {
 	return &jsonapi.Meta{
-		"stats": &jsonapi.Meta{
-			"requests": &jsonapi.Meta{
+		"stats": jsonapi.Meta{
+			"requests": jsonapi.Meta{
 				"total":      b.Stats.Total,
 				"break_down": b.Stats.Breakdown(),
 			},
