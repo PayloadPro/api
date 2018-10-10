@@ -1,7 +1,7 @@
 # Payload Pro API
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/a2b86c9814643d6cc55a/maintainability)](https://codeclimate.com/github/PayloadPro/pro.payload.api/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/a2b86c9814643d6cc55a/test_coverage)](https://codeclimate.com/github/PayloadPro/pro.payload.api/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/11b69982ee825e681128/maintainability)](https://codeclimate.com/github/PayloadPro/api/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/11b69982ee825e681128/test_coverage)](https://codeclimate.com/github/PayloadPro/api/test_coverage)
 
 The PayloadPro API container is a Docker container that contains a Go binary built from this repo for running the PayloadPro API. It exposes API endpoints to interact with the bins, requests and stats.
 
@@ -22,3 +22,11 @@ When running the container you can use the following environment variables:
 PayloadPro is a web application which gives you endpoints to send HTTP requests to and view the contents of the request.
 
 It's primary purpose is for debugging connected application features, such as webhooks.
+
+## Testing
+
+The source code can be tested with:
+
+```
+go test ./...
+``` 
