@@ -2,8 +2,9 @@ package main
 
 import (
 	"log"
-	"net/http"
 
+	"github.com/PayloadPro/api/handlers"
+	"github.com/PayloadPro/api/responses"
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/logger"
 	"github.com/gofiber/recover"
@@ -11,20 +12,23 @@ import (
 )
 
 var (
-	err error
-	app *fiber.App
-	cfg Config
+	err  error
+	app  *fiber.App
+	conf Config
 )
 
 type Config struct {
-	Port           int
-	AddressAPI     string `split_words:"true"`
-	AddressWebsite string `split_words:"true"`
+	Port int
 }
 
 func init() {
 
-	err = envconfig.Process("", &cfg)
+	err = envconfig.Process("", &conf)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = envconfig.Process("", &responses.Conf)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,7 +36,7 @@ func init() {
 	app = fiber.New()
 	app.Use(logger.New())
 	app.Use(recover.New(recover.Config{
-		Handler: errHandler,
+		Handler: responses.ErrHandler,
 	}))
 }
 
@@ -42,7 +46,10 @@ func main() {
 }
 
 func setupRoutes() {
-	app.Get("/", rootHandler)
+	app.Get("/", handlers.Root)
+	app.Post("/bins", handlers.CreateBin)
+	app.Get("/bins", handlers.GetBins)
+	app.Get("/bins/:id", handlers.GetBin)
 
 	app.Get("/b", func(c *fiber.Ctx) {
 		panic("Something went wrong!")
@@ -50,25 +57,6 @@ func setupRoutes() {
 }
 
 func serve() {
-	app.Use(func(c *fiber.Ctx) {
-		c.SendStatus(404)
-	})
-	app.Listen(cfg.Port)
-}
-
-func rootHandler(c *fiber.Ctx) {
-	a := make(map[string]interface{}, 0)
-	a["message"] = "Welcome to Payload Pro"
-
-	l := make(map[string]string, 0)
-	l["api"] = cfg.AddressAPI
-	l["site"] = cfg.AddressWebsite
-	c.JSON(response{
-		Data: data{
-			Type:       "root",
-			Attributes: a,
-			Links:      l,
-		},
-	})
-	c.SendStatus(http.StatusOK)
+	app.Use(responses.NotFound)
+	app.Listen(conf.Port)
 }
